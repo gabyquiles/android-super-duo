@@ -34,6 +34,16 @@
                 android:value="barqsoft.footballscores.MainActivity" />
         </activity>
         <service android:name=".service.myFetchService" />
+        <receiver android:name=".widget.LatestScoreWidgetProvider" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <!-- TODO: Fix -->
+                <!--<action android:name="com.gabyquiles.sunshine.ACTION_DATA_UPDATED" />-->
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider"
+                android:resource="@xml/latest_score_widget" />
+        </receiver>
+        <service android:name=".widget.LatestScoreIntentService" />
     </application>
 
 </manifest>

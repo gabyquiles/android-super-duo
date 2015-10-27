@@ -1,0 +1,9 @@
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:initialLayout="@layout/widget_latest_match"
+    android:minHeight="@dimen/widget_latest_match_default_height"
+    android:minResizeWidth="@dimen/widget_latest_match_default_width"
+    android:minWidth="@dimen/widget_latest_match_default_width"
+    android:resizeMode="horizontal"
+    android:updatePeriodMillis="0"
+    tools:ignore="UnusedAttribute" />

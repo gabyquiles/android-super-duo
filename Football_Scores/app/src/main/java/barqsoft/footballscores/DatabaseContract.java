@@ -44,6 +44,10 @@ public class DatabaseContract
         {
             return BASE_CONTENT_URI.buildUpon().appendPath("date").build();
         }
+        public static Uri buildScoredMatches()
+        {
+            return BASE_CONTENT_URI.buildUpon().appendPath("scored").build();
+        }
     }
     //URI data
     public static final String CONTENT_AUTHORITY = "barqsoft.footballscores";

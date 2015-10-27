@@ -1,10 +1,18 @@
 package barqsoft.footballscores;
 
+import android.util.Log;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
+
 /**
  * Created by yehya khaled on 3/3/2015.
  */
 public class Utilies
 {
+    private static  String LOG_TAG = "Utilities";
     public static final int SERIE_A = 357;
     public static final int PREMIER_LEGAUE = 354;
     public static final int CHAMPIONS_LEAGUE = 362;
@@ -14,7 +22,7 @@ public class Utilies
     {
         switch (league_num)
         {
-            case SERIE_A : return "Seria A";
+            case SERIE_A : return "Series A";
             case PREMIER_LEGAUE : return "Premier League";
             case CHAMPIONS_LEAGUE : return "UEFA Champions League";
             case PRIMERA_DIVISION : return "Primera Division";
@@ -83,5 +91,20 @@ public class Utilies
             case "Stoke City FC" : return R.drawable.stoke_city;
             default: return R.drawable.no_icon;
         }
+    }
+
+    public static String getDateTime(String date, String time) {
+        SimpleDateFormat match_date = new SimpleDateFormat("yyyy-MM-ddHH:mm");
+        match_date.setTimeZone(TimeZone.getDefault());
+        Date parseddate;
+        SimpleDateFormat new_format;
+        try {
+            parseddate = match_date.parse(date + time);
+            new_format = new SimpleDateFormat("MM/dd HH:mm");
+            return new_format.format(parseddate);
+        } catch (ParseException e) {
+            Log.e(LOG_TAG, "Error parsing date");
+        }
+        return "Unknown";
     }
 }
