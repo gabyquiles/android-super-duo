@@ -9,7 +9,7 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="5dp"
+        android:paddingTop="@dimen/list_item_padding"
         android:background="@color/primary_light"
         >
         <LinearLayout

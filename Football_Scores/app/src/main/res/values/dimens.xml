@@ -11,4 +11,8 @@
     <dimen name="widget_latest_match_default_height">40dp</dimen>
     <dimen name="widget_latest_match_default_width">180dp</dimen>
     <dimen name="widget_latest_match_large_width">250dp</dimen>
+    <dimen name="layout_margin">20dp</dimen>
+    <dimen name="button_horizontal_padding">120dp</dimen>
+    <dimen name="pager_padding">4dp</dimen>
+    <dimen name="list_item_padding">5dp</dimen>
 </resources>
