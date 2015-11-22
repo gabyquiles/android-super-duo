@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
+import barqsoft.footballscores.sync.FootballScoresSyncAdapter;
+
 /**
  * Created by gabrielquiles-perez on 10/26/15.
  */
@@ -25,10 +27,8 @@ public class LatestScoreWidgetProvider extends AppWidgetProvider {
     @Override
     public void onReceive(@NonNull Context context, @NonNull Intent intent) {
         super.onReceive(context, intent);
-        //TODO: Use Sync Adapter
-        int i = 0;
-//        if (SunshineSyncAdapter.ACTION_DATA_UPDATED.equals(intent.getAction())) {
-//            context.startService(new Intent(context, TodayWidgetIntentService.class));
-//        }
+        if (FootballScoresSyncAdapter.ACTION_DATA_UPDATED.equals(intent.getAction())) {
+            context.startService(new Intent(context, LatestScoreIntentService.class));
+        }
     }
 }

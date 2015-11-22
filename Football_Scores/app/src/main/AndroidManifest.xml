@@ -46,8 +46,7 @@
         <receiver android:name=".widget.LatestScoreWidgetProvider" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <!-- TODO: Fix -->
-                <!--<action android:name="com.gabyquiles.sunshine.ACTION_DATA_UPDATED" />-->
+                <action android:name="barqsoft.footballscores.ACTION_DATA_UPDATED" />
             </intent-filter>
             <meta-data android:name="android.appwidget.provider"
                 android:resource="@xml/latest_score_widget" />
