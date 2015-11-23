@@ -3,28 +3,15 @@ package barqsoft.footballscores;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.drawable.PictureDrawable;
 import android.net.Uri;
 import android.support.v4.widget.CursorAdapter;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.bumptech.glide.GenericRequestBuilder;
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.model.StreamEncoder;
-import com.bumptech.glide.load.resource.file.FileToStreamDecoder;
-import com.caverock.androidsvg.SVG;
-
-import java.io.InputStream;
-
-import barqsoft.footballscores.images.SvgDecoder;
-import barqsoft.footballscores.images.SvgDrawableTranscoder;
-import barqsoft.footballscores.images.SvgSoftwareLayerSetter;
 
 /**
  * Created by yehya khaled on 2/26/2015.
@@ -38,9 +25,9 @@ public class scoresAdapter extends CursorAdapter
     public static final int COL_AWAY_GOALS = 7;
     public static final int COL_DATE = 1;
     public static final int COL_LEAGUE = 5;
-    public static final int COL_HOME_ID = 10;
-    public static final int COL_AWAY_ID = 11;
-    public static final int COL_MATCHDAY = 12;
+    public static final int COL_HOME_ID = 9;
+    public static final int COL_AWAY_ID = 10;
+    public static final int COL_MATCHDAY = 11;
     public static final int COL_ID = 8;
     public static final int COL_MATCHTIME = 2;
     public double detail_match_id = 0;
@@ -54,22 +41,22 @@ public class scoresAdapter extends CursorAdapter
     private static final int SHORT_NAME_COL = 0;
     private static final int CREST_COL = 1;
 
-    private GenericRequestBuilder<Uri, InputStream, SVG, PictureDrawable> mRequestBuilder;
+//    private GenericRequestBuilder<Uri, InputStream, SVG, PictureDrawable> mRequestBuilder;
 
     public scoresAdapter(Context context,Cursor cursor,int flags)
     {
         super(context,cursor,flags);
-        mRequestBuilder = Glide.with(mContext)
-                .using(Glide.buildStreamModelLoader(Uri.class, context), InputStream.class)
-                .from(Uri.class)
-                .as(SVG.class)
-                .transcode(new SvgDrawableTranscoder(), PictureDrawable.class)
-                .sourceEncoder(new StreamEncoder())
-                .cacheDecoder(new FileToStreamDecoder<SVG>(new SvgDecoder()))
-                .decoder(new SvgDecoder())
-                .error(R.drawable.no_icon)
-                .animate(android.R.anim.fade_in)
-                .listener(new SvgSoftwareLayerSetter<Uri>());
+//        mRequestBuilder = Glide.with(mContext)
+//                .using(Glide.buildStreamModelLoader(Uri.class, context), InputStream.class)
+//                .from(Uri.class)
+//                .as(SVG.class)
+//                .transcode(new SvgDrawableTranscoder(), PictureDrawable.class)
+//                .sourceEncoder(new StreamEncoder())
+//                .cacheDecoder(new FileToStreamDecoder<SVG>(new SvgDecoder()))
+//                .decoder(new SvgDecoder())
+//                .error(R.drawable.no_icon)
+//                .animate(android.R.anim.fade_in)
+//                .listener(new SvgSoftwareLayerSetter<Uri>());
     }
 
     @Override
@@ -89,41 +76,12 @@ public class scoresAdapter extends CursorAdapter
         mHolder.home_name.setText(cursor.getString(COL_HOME));
         mHolder.away_name.setText(cursor.getString(COL_AWAY));
         mHolder.date.setText(cursor.getString(COL_MATCHTIME));
-        mHolder.score.setText(Utilies.getScores(cursor.getInt(COL_HOME_GOALS), cursor.getInt(COL_AWAY_GOALS)));
+        mHolder.score.setText(Utilities.getScores(cursor.getInt(COL_HOME_GOALS), cursor.getInt(COL_AWAY_GOALS)));
         mHolder.match_id = cursor.getDouble(COL_ID);
 
-        //If team does not exists
-        Uri homeUri = DatabaseContract.teams_table.buildTeamUri(cursor.getLong(COL_HOME_ID));
-        Cursor homeCursor = context.getContentResolver().query(homeUri, TEAM_COLUMNS, null,
-                null, null);
 
-        Uri homeCrestUrl = null;
-        if(homeCursor.moveToFirst()) {
-            homeCrestUrl = Uri.parse(homeCursor.getString(CREST_COL));
-            Log.v(LOG_TAG, homeCrestUrl.toString());
-        }
-
-        mRequestBuilder
-                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                        // SVG cannot be serialized so it's not worth to cache it
-                .load(homeCrestUrl)
-                .into(mHolder.home_crest);
-
-        //If team does not exists
-        Uri awayUri = DatabaseContract.teams_table.buildTeamUri(cursor.getLong(COL_AWAY_ID));
-        Cursor awayCursor = context.getContentResolver().query(awayUri, TEAM_COLUMNS, null,
-                null, null);
-
-        Uri awayCrestUrl = null;
-        if(awayCursor.moveToFirst()) {
-            awayCrestUrl = Uri.parse(awayCursor.getString(CREST_COL));
-        }
-
-        mRequestBuilder
-                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                        // SVG cannot be serialized so it's not worth to cache it
-                .load(awayCrestUrl)
-                .into(mHolder.away_crest);
+        Utilities.loadTeamCrestIntoView(context, cursor.getLong(COL_HOME_ID), mHolder.home_crest);
+        Utilities.loadTeamCrestIntoView(context, cursor.getLong(COL_AWAY_ID), mHolder.away_crest);
 
         LayoutInflater vi = (LayoutInflater) context.getApplicationContext()
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -134,10 +92,10 @@ public class scoresAdapter extends CursorAdapter
             container.addView(v, 0, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT
                     , ViewGroup.LayoutParams.MATCH_PARENT));
             TextView match_day = (TextView) v.findViewById(R.id.matchday_textview);
-            match_day.setText(Utilies.getMatchDay(cursor.getInt(COL_MATCHDAY),
+            match_day.setText(Utilities.getMatchDay(cursor.getInt(COL_MATCHDAY),
                     cursor.getInt(COL_LEAGUE)));
             TextView league = (TextView) v.findViewById(R.id.league_textview);
-            league.setText(Utilies.getLeague(cursor.getInt(COL_LEAGUE)));
+            league.setText(Utilities.getLeague(cursor.getInt(COL_LEAGUE)));
             Button share_button = (Button) v.findViewById(R.id.share_button);
             share_button.setOnClickListener(new View.OnClickListener() {
                 @Override

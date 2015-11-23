@@ -1,84 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<android.support.v7.widget.GridLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:elevation="@dimen/pager_padding"
+    android:padding="@dimen/list_item_padding"
     android:background="@drawable/list_item"
-    >
-    <LinearLayout
-        android:orientation="horizontal" android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="@dimen/list_item_padding"
-        android:background="@color/primary_light"
-        >
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical">
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:id="@+id/home_crest"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:textSize="@dimen/TeamNames"
-                android:gravity="center"
-                android:text="@string/test_text"
-                android:id="@+id/home_name"/>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:text="@string/test_text"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:textSize="@dimen/Score"
-                android:id="@+id/score_textview"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:text="@string/test_text"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:id="@+id/data_textview"/>
+    app:columnCount="3">
 
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical">
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:id="@+id/away_crest"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:text="@string/test_text"
-                android:textSize="@dimen/TeamNames"
-                android:id="@+id/away_name"/>
-        </LinearLayout>
-    </LinearLayout>
-    <FrameLayout
-        android:layout_width="match_parent"
+    <ImageView
+        android:id="@+id/home_crest"
+        android:layout_width="0dp"
+        android:maxHeight="@dimen/crest_size"
+        android:minHeight="@dimen/crest_size"
+        app:layout_gravity="fill_horizontal"
+        android:adjustViewBounds="true"
+        app:layout_columnWeight="1"
+        tools:src="R.drawable.no_icon"
+        />
+    <TextView
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:text="@string/test_text"
+        app:layout_gravity="fill_horizontal"
+        android:gravity="center"
+        app:layout_columnWeight="3"
+        android:textSize="@dimen/Score"
+        android:id="@+id/score_textview"/>
+    <ImageView
+        android:id="@+id/away_crest"
+        android:layout_width="0dp"
+        android:maxHeight="@dimen/crest_size"
+        android:minHeight="@dimen/crest_size"
+        app:layout_gravity="fill_horizontal"
+        android:adjustViewBounds="true"
+        app:layout_columnWeight="1"
+        tools:src="R.drawable.no_icon"
+        />
+
+    <TextView
+        android:id="@+id/home_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_gravity="fill_horizontal"
+        android:textSize="@dimen/TeamNames"
+        android:gravity="center"
+        android:text="@string/test_text"
+        app:layout_columnWeight="2"
+        />
+    <TextView
+        android:id="@+id/date_textview"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="@string/test_text"
+        app:layout_gravity="fill_horizontal"
+        android:gravity="center"
+        app:layout_columnWeight="1"
+        />
+    <TextView
+        android:id="@+id/away_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_gravity="fill_horizontal"
+        android:textSize="@dimen/TeamNames"
+        android:gravity="center"
+        android:text="@string/test_text"
+        app:layout_columnWeight="2"
+        />
+
+
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_columnSpan="3"
+        app:layout_columnWeight="1"
         android:id="@+id/details_fragment_container">
     </FrameLayout>
-</LinearLayout>
+</android.support.v7.widget.GridLayout>
 
 

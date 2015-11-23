@@ -8,7 +8,7 @@
         android:id="@+id/widget"
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:paddingTop="@dimen/list_item_padding"
         android:background="@color/primary_light"
         >
@@ -18,10 +18,13 @@
             android:layout_weight="1"
             android:orientation="vertical">
             <ImageView
-                android:layout_width="wrap_content"
+                android:id="@+id/home_crest"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:id="@+id/home_crest"/>
+                android:maxHeight="@dimen/crest_size"
+                android:minHeight="@dimen/crest_size"
+                android:src="@drawable/no_icon"
+                android:adjustViewBounds="true"/>
         </LinearLayout>
         <LinearLayout
             android:layout_width="0dp"
@@ -30,18 +33,17 @@
             android:orientation="vertical">
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="wrap_content"
                 android:text="@string/test_text"
+                android:textSize="@dimen/Score"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:textSize="@dimen/Score"
                 android:id="@+id/score_textview"/>
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="wrap_content"
                 android:text="@string/test_text"
+                android:textSize="@dimen/League"
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:id="@+id/datetime_textview"/>
@@ -53,10 +55,13 @@
             android:layout_weight="1"
             android:orientation="vertical">
             <ImageView
-                android:layout_width="wrap_content"
+                android:id="@+id/away_crest"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:id="@+id/away_crest"/>
+                android:maxHeight="@dimen/crest_size"
+                android:minHeight="@dimen/crest_size"
+                android:src="@drawable/no_icon"
+                android:adjustViewBounds="true"/>
         </LinearLayout>
     </LinearLayout>
 </FrameLayout>

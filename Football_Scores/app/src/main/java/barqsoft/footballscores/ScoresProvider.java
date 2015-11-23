@@ -160,7 +160,6 @@ public class ScoresProvider extends ContentProvider
         selection = TEAM_BY_ID;
         selectionArgs = new String[]{id};
 
-        Log.v(LOG_TAG, TEAM_BY_ID);
         return mOpenHelper.getReadableDatabase().query(DatabaseContract.TEAMS_TABLE,
                 projection,
                 selection,
@@ -175,7 +174,6 @@ public class ScoresProvider extends ContentProvider
     public Uri insert(Uri uri, ContentValues values) {
 
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
-//        final int match = match_uri(uri);
         Uri returnUri;
 
         switch (muriMatcher.match(uri)) {

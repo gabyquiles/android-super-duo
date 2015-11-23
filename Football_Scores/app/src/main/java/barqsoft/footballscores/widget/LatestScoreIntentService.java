@@ -7,17 +7,19 @@ import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
+import android.widget.ImageView;
 import android.widget.RemoteViews;
 
 import barqsoft.footballscores.DatabaseContract;
 import barqsoft.footballscores.MainActivity;
 import barqsoft.footballscores.R;
-import barqsoft.footballscores.Utilies;
+import barqsoft.footballscores.Utilities;
 
 /**
  * Created by gabrielquiles-perez on 10/26/15.
@@ -31,6 +33,8 @@ public class LatestScoreIntentService extends IntentService {
             DatabaseContract.scores_table.AWAY_GOALS_COL,
             DatabaseContract.scores_table.DATE_COL,
             DatabaseContract.scores_table.TIME_COL,
+            DatabaseContract.scores_table.HOMEID_COL,
+            DatabaseContract.scores_table.AWAYID_COL,
     };
     // these indices must match the projection
     private static final int COL_ID = 0;
@@ -40,6 +44,8 @@ public class LatestScoreIntentService extends IntentService {
     private static final int COL_AWAY_GOALS = 4;
     private static final int COL_DATE = 5;
     private static final int COL_TIME = 6;
+    private static final int COL_HOME_ID = 7;
+    private static final int COL_AWAY_ID = 8;
 
     public LatestScoreIntentService() {
         super("LatestScoreIntentService");
@@ -65,14 +71,13 @@ public class LatestScoreIntentService extends IntentService {
 
         // Extract the weather data from the Cursor
         int matchId = data.getInt(COL_ID);
-//        int weatherArtResourceId = Utility.getArtResourceForWeatherCondition(weatherId);
         String homeTeam = data.getString(COL_HOME);
         String awayTeam = data.getString(COL_AWAY);
         int homeGoals = data.getInt(COL_HOME_GOALS);
         int awayGoals = data.getInt(COL_AWAY_GOALS);
-        int homeCrest = Utilies.getTeamCrestByTeamName(homeTeam);
-        int awayCrest = Utilies.getTeamCrestByTeamName(awayTeam);
-        String dateTime = Utilies.getDateTime(data.getString(COL_DATE), data.getString(COL_TIME));
+        Bitmap homeCrest = Utilities.getTeamCrest(getApplicationContext(), data.getLong(COL_HOME_ID));
+        Bitmap awayCrest = Utilities.getTeamCrest(getApplicationContext(), data.getLong(COL_AWAY_ID));
+        String dateTime = Utilities.getDateTime(data.getString(COL_DATE), data.getString(COL_TIME));
         data.close();
 
         // Perform this loop procedure for each Today widget
@@ -92,9 +97,10 @@ public class LatestScoreIntentService extends IntentService {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
                 setRemoteContentDescription(views, homeTeam, awayTeam);
             }
-            String score = Utilies.getScores(homeGoals, awayGoals);
-            views.setImageViewResource(R.id.home_crest, homeCrest);
-            views.setImageViewResource(R.id.away_crest, awayCrest);
+            String score = Utilities.getScores(homeGoals, awayGoals);
+            views.setImageViewBitmap(R.id.home_crest, homeCrest);
+            views.setImageViewBitmap(R.id.away_crest, awayCrest);
+
             views.setTextViewText(R.id.score_textview, score);
             views.setTextViewText(R.id.datetime_textview, dateTime);
 
