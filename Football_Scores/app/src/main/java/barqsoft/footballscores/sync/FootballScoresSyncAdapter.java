@@ -184,7 +184,6 @@ public class FootballScoresSyncAdapter extends AbstractThreadedSyncAdapter {
                     Team team = response.body();
                     if(team != null) {
                         ContentValues team_values = new ContentValues();
-                        Log.v(LOG_TAG, DatabaseContract.teams_table.TEAM_ID + " = " + team_id);
                         team_values.put(DatabaseContract.teams_table.TEAM_ID, team_id);
                         team_values.put(DatabaseContract.teams_table.FULL_NAME, team.getFullName());
                         team_values.put(DatabaseContract.teams_table.SHORT_NAME, team.getShortName());

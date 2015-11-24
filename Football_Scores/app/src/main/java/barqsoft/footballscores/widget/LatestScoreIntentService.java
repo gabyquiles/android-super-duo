@@ -13,12 +13,14 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
-import android.widget.ImageView;
 import android.widget.RemoteViews;
 
 import barqsoft.footballscores.DatabaseContract;
 import barqsoft.footballscores.MainActivity;
 import barqsoft.footballscores.R;
+import barqsoft.footballscores.images.ImageLoader;
+import barqsoft.footballscores.images.PNGLoader;
+import barqsoft.footballscores.images.SVGLoader;
 import barqsoft.footballscores.Utilities;
 
 /**
@@ -75,8 +77,36 @@ public class LatestScoreIntentService extends IntentService {
         String awayTeam = data.getString(COL_AWAY);
         int homeGoals = data.getInt(COL_HOME_GOALS);
         int awayGoals = data.getInt(COL_AWAY_GOALS);
-        Bitmap homeCrest = Utilities.getTeamCrest(getApplicationContext(), data.getLong(COL_HOME_ID));
-        Bitmap awayCrest = Utilities.getTeamCrest(getApplicationContext(), data.getLong(COL_AWAY_ID));
+        Bitmap homeCrest = null;
+        Bitmap awayCrest = null;
+
+
+        String homeCrestURL = Utilities.getTeamCrestUrl(getApplicationContext(), data.getLong(COL_HOME_ID));
+        String awayCrestURL = Utilities.getTeamCrestUrl(getApplicationContext(), data.getLong(COL_AWAY_ID));
+
+        ImageLoader loader = null;
+        if(homeCrestURL != null) {
+            if(homeCrestURL.toLowerCase().endsWith("svg")) {
+                loader = SVGLoader.getInstance(getApplicationContext());
+            } else if(homeCrestURL.toLowerCase().endsWith("png")) {
+                loader = PNGLoader.getInstance(getApplicationContext());
+            }
+            if(loader != null) {
+                homeCrest = loader.getTeamCrestAsBitmap(homeCrestURL);
+            }
+        }
+
+        if(awayCrestURL != null) {
+            if(awayCrestURL.toLowerCase().endsWith("svg")) {
+                loader = SVGLoader.getInstance(getApplicationContext());
+            } else if(awayCrestURL.toLowerCase().endsWith("png")) {
+                loader = PNGLoader.getInstance(getApplicationContext());
+            }
+            if(loader != null) {
+                awayCrest = loader.getTeamCrestAsBitmap(awayCrestURL);
+            }
+        }
+
         String dateTime = Utilities.getDateTime(data.getString(COL_DATE), data.getString(COL_TIME));
         data.close();
 
@@ -98,8 +128,18 @@ public class LatestScoreIntentService extends IntentService {
                 setRemoteContentDescription(views, homeTeam, awayTeam);
             }
             String score = Utilities.getScores(homeGoals, awayGoals);
-            views.setImageViewBitmap(R.id.home_crest, homeCrest);
-            views.setImageViewBitmap(R.id.away_crest, awayCrest);
+            if(homeCrest != null) {
+                views.setImageViewBitmap(R.id.home_crest, homeCrest);
+            } else {
+                int i =0;
+                views.setImageViewResource(R.id.home_crest, R.drawable.no_icon);
+            }
+            if(awayCrest != null) {
+                views.setImageViewBitmap(R.id.away_crest, awayCrest);
+            } else {
+                int i =0;
+                views.setImageViewResource(R.id.away_crest, R.drawable.no_icon);
+            }
 
             views.setTextViewText(R.id.score_textview, score);
             views.setTextViewText(R.id.datetime_textview, dateTime);

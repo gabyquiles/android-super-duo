@@ -3,7 +3,6 @@ package barqsoft.footballscores;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.net.Uri;
 import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +10,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import barqsoft.footballscores.images.ImageLoader;
+import barqsoft.footballscores.images.PNGLoader;
+import barqsoft.footballscores.images.SVGLoader;
 
 /**
  * Created by yehya khaled on 2/26/2015.
@@ -46,17 +47,6 @@ public class scoresAdapter extends CursorAdapter
     public scoresAdapter(Context context,Cursor cursor,int flags)
     {
         super(context,cursor,flags);
-//        mRequestBuilder = Glide.with(mContext)
-//                .using(Glide.buildStreamModelLoader(Uri.class, context), InputStream.class)
-//                .from(Uri.class)
-//                .as(SVG.class)
-//                .transcode(new SvgDrawableTranscoder(), PictureDrawable.class)
-//                .sourceEncoder(new StreamEncoder())
-//                .cacheDecoder(new FileToStreamDecoder<SVG>(new SvgDecoder()))
-//                .decoder(new SvgDecoder())
-//                .error(R.drawable.no_icon)
-//                .animate(android.R.anim.fade_in)
-//                .listener(new SvgSoftwareLayerSetter<Uri>());
     }
 
     @Override
@@ -79,9 +69,32 @@ public class scoresAdapter extends CursorAdapter
         mHolder.score.setText(Utilities.getScores(cursor.getInt(COL_HOME_GOALS), cursor.getInt(COL_AWAY_GOALS)));
         mHolder.match_id = cursor.getDouble(COL_ID);
 
+        String homeCrestURL = Utilities.getTeamCrestUrl(context, cursor.getLong(COL_HOME_ID));
+        String awayCrestURL = Utilities.getTeamCrestUrl(context, cursor.getLong(COL_AWAY_ID));
 
-        Utilities.loadTeamCrestIntoView(context, cursor.getLong(COL_HOME_ID), mHolder.home_crest);
-        Utilities.loadTeamCrestIntoView(context, cursor.getLong(COL_AWAY_ID), mHolder.away_crest);
+        ImageLoader loader = null;
+        if(homeCrestURL != null) {
+            if(homeCrestURL.toLowerCase().endsWith("svg")) {
+                loader = SVGLoader.getInstance(mContext);
+
+            } else if(homeCrestURL.toLowerCase().endsWith("png")) {
+                loader = PNGLoader.getInstance(mContext);
+            }
+            if(loader != null) {
+                loader.loadIntoImageView(homeCrestURL, mHolder.home_crest);
+            }
+        }
+        if(awayCrestURL != null) {
+            if(awayCrestURL.toLowerCase().endsWith("svg")) {
+                loader = SVGLoader.getInstance(mContext);
+
+            } else if(awayCrestURL.toLowerCase().endsWith("png")) {
+                loader = PNGLoader.getInstance(mContext);
+            }
+            if(loader != null) {
+                loader.loadIntoImageView(awayCrestURL, mHolder.away_crest);
+            }
+        }
 
         LayoutInflater vi = (LayoutInflater) context.getApplicationContext()
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);

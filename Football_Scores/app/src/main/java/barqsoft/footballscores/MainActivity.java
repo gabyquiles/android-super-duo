@@ -13,6 +13,7 @@ public class MainActivity extends ActionBarActivity
 {
     //TODO: Error Network down
     //TODO: No data for today
+    //TODO: List is hidden at the bottom
     public static int selected_match_id;
     public static int current_fragment = 2;
     public static String LOG_TAG = "MainActivity";

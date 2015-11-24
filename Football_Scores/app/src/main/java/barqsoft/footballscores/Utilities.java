@@ -2,34 +2,13 @@ package barqsoft.footballscores;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.drawable.PictureDrawable;
 import android.net.Uri;
 import android.util.Log;
-import android.widget.ImageView;
 
-import com.bumptech.glide.BitmapTypeRequest;
-import com.bumptech.glide.DrawableTypeRequest;
-import com.bumptech.glide.GenericRequestBuilder;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.RequestManager;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.model.StreamEncoder;
-import com.bumptech.glide.load.resource.file.FileToStreamDecoder;
-import com.bumptech.glide.request.FutureTarget;
-import com.caverock.androidsvg.SVG;
-
-import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
-import java.util.concurrent.ExecutionException;
-
-import barqsoft.footballscores.images.SvgDecoder;
-import barqsoft.footballscores.images.SvgDrawableTranscoder;
-import barqsoft.footballscores.images.SvgSoftwareLayerSetter;
 
 /**
  * Created by yehya khaled on 3/3/2015.
@@ -132,7 +111,7 @@ public class Utilities
         return "Unknown";
     }
 
-    public static void loadTeamCrestIntoView(Context context, Long team_id, ImageView view) {
+    public static String getTeamCrestUrl(Context context, Long team_id) {
         String[] columns = {
                 DatabaseContract.teams_table.SHORT_NAME,
                 DatabaseContract.teams_table.CREST,
@@ -144,76 +123,7 @@ public class Utilities
         if(teamCursor.moveToFirst()) {
             String url = teamCursor.getString(1);
             teamCursor.close();
-            loadSVGIntoImageView(context, url, view);
-        }
-    }
-
-    public static Bitmap getTeamCrest(Context context, Long team_id) {
-        String[] columns = {
-                DatabaseContract.teams_table.SHORT_NAME,
-                DatabaseContract.teams_table.CREST,
-        };
-
-        Uri homeUri = DatabaseContract.teams_table.buildTeamUri(team_id);
-        Cursor teamCursor = context.getContentResolver().query(homeUri, columns, null,
-                null, null);
-        if(teamCursor.moveToFirst()) {
-            String url = teamCursor.getString(1);
-            teamCursor.close();
-            return getTeamCrestAsBitmap(context, url);
-        }
-        return null;
-    }
-
-    private static void loadSVGIntoImageView(Context context, String url, ImageView view) {
-        GenericRequestBuilder<Uri, InputStream, SVG, PictureDrawable> requestBuilder = Glide
-                .with(context)
-                .using(Glide.buildStreamModelLoader(Uri.class, context), InputStream.class)
-                .from(Uri.class)
-                .as(SVG.class)
-                .transcode(new SvgDrawableTranscoder(), PictureDrawable.class)
-                .sourceEncoder(new StreamEncoder())
-                .cacheDecoder(new FileToStreamDecoder<SVG>(new SvgDecoder()))
-                .decoder(new SvgDecoder())
-                .error(R.drawable.no_icon)
-                .animate(android.R.anim.fade_in)
-                .listener(new SvgSoftwareLayerSetter<Uri>());
-
-        requestBuilder.diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                // SVG cannot be serialized so it's not worth to cache it
-                .load(Uri.parse(url))
-                .into(view);
-    }
-
-    private static Bitmap getTeamCrestAsBitmap(Context context,  String url) {
-        try {
-            GenericRequestBuilder<Uri, InputStream, SVG, PictureDrawable> requestBuilder = Glide
-                    .with(context)
-                    .using(Glide.buildStreamModelLoader(Uri.class, context), InputStream.class)
-                    .from(Uri.class)
-                    .as(SVG.class)
-                    .transcode(new SvgDrawableTranscoder(), PictureDrawable.class)
-                    .sourceEncoder(new StreamEncoder())
-                    .cacheDecoder(new FileToStreamDecoder<SVG>(new SvgDecoder()))
-                    .decoder(new SvgDecoder())
-                    .error(R.drawable.no_icon)
-                    .animate(android.R.anim.fade_in);
-
-            PictureDrawable pictureDrawable = requestBuilder
-                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                    .load(Uri.parse(url)).into(40, 40).get();
-
-            Bitmap bitmap = Bitmap.createBitmap(pictureDrawable.getIntrinsicWidth(),
-                    pictureDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-            Canvas canvas = new Canvas(bitmap);
-            canvas.drawPicture(pictureDrawable.getPicture());
-            return bitmap;
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
+            return url;
         }
         return null;
     }
