@@ -8,18 +8,20 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.SyncRequest;
 import android.content.SyncResult;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.IntDef;
 import android.text.format.Time;
-import android.util.Log;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.net.HttpURLConnection;
 import java.util.List;
 import java.util.Vector;
 
@@ -69,14 +71,14 @@ public class FootballScoresSyncAdapter extends AbstractThreadedSyncAdapter {
 
     @Retention(RetentionPolicy.SOURCE)
     @IntDef({LOCATION_STATUS_OK, LOCATION_STATUS_SERVER_DOWN,
-            LOCATION_STATUS_SERVER_INVALID, LOCATION_STATUS_UNKNOWN, LOCATION_STATUS_INVALID_LOCATION})
+            LOCATION_STATUS_SERVER_INVALID, LOCATION_STATUS_UNKNOWN, LOCATION_STATUS_INVALID_REQUEST})
     public @interface LocationStatus{};
 
     public static final int LOCATION_STATUS_OK = 0;
     public static final int LOCATION_STATUS_SERVER_DOWN = 1;
     public static final int LOCATION_STATUS_SERVER_INVALID = 2;
     public static final int LOCATION_STATUS_UNKNOWN = 3;
-    public static final int LOCATION_STATUS_INVALID_LOCATION = 4;
+    public static final int LOCATION_STATUS_INVALID_REQUEST = 4;
     public static final String ACTION_DATA_UPDATED = "barqsoft.footballscores.ACTION_DATA_UPDATED";
 
     private static final long DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
@@ -105,17 +107,39 @@ public class FootballScoresSyncAdapter extends AbstractThreadedSyncAdapter {
         call.enqueue(new Callback<List<Fixture>>() {
             @Override
             public void onResponse(retrofit.Response<List<Fixture>> response, Retrofit retrofit) {
-                List<Fixture> list = response.body();
-                if(list != null) {
-                    insertFixtures(getContext().getApplicationContext(), list);
+                if(checkCode(response.code())) {
+                    List<Fixture> list = response.body();
+                    if (list != null) {
+                        insertFixtures(getContext().getApplicationContext(), list);
+                    }
+                    setLocationStatus(getContext(), LOCATION_STATUS_OK);
                 }
             }
 
             @Override
             public void onFailure(Throwable t) {
                 // Log error here since request failed
+                setLocationStatus(getContext(), LOCATION_STATUS_UNKNOWN);
             }
         });
+    }
+
+    private boolean checkCode(int code) {
+        boolean success = false;
+        switch (code) {
+            case HttpURLConnection.HTTP_OK:
+                success = true;
+                break;
+            case HttpURLConnection.HTTP_NOT_FOUND:
+                setLocationStatus(getContext(), LOCATION_STATUS_INVALID_REQUEST);
+                success = false;
+                break;
+            default:
+                setLocationStatus(getContext(), LOCATION_STATUS_SERVER_DOWN);
+                success = false;
+                break;
+        }
+        return success;
     }
 
     private int insertFixtures(Context context, List matches) {
@@ -300,5 +324,15 @@ public class FootballScoresSyncAdapter extends AbstractThreadedSyncAdapter {
 
     public static void initializeSyncAdapter(Context context) {
         getSyncAccount(context);
+    }
+
+    /**
+     * Store the status of the location update
+     */
+    static private void setLocationStatus(Context context, @LocationStatus int status) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt(context.getString(R.string.pref_location_status_key), status);
+        editor.commit();
     }
 }

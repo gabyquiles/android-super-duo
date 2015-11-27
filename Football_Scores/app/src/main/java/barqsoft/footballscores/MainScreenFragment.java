@@ -12,6 +12,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
+
+import barqsoft.footballscores.sync.FootballScoresSyncAdapter;
 
 
 /**
@@ -38,7 +41,10 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
         final ListView score_list = (ListView) rootView.findViewById(R.id.scores_list);
         mAdapter = new scoresAdapter(getActivity(),null,0);
         score_list.setAdapter(mAdapter);
+        TextView emptyView = (TextView) rootView.findViewById(R.id.empty);
+        score_list.setEmptyView(emptyView);
         getLoaderManager().initLoader(SCORES_LOADER,null,this);
+
         mAdapter.detail_match_id = MainActivity.selected_match_id;
         score_list.setOnItemClickListener(new AdapterView.OnItemClickListener()
         {
@@ -64,11 +70,10 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor)
     {
-        int i = 0;
+        updateEmptyView();
         cursor.moveToFirst();
         while (!cursor.isAfterLast())
         {
-            i++;
             cursor.moveToNext();
         }
         mAdapter.swapCursor(cursor);
@@ -80,5 +85,30 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
         mAdapter.swapCursor(null);
     }
 
+    private void updateEmptyView() {
+        if(mAdapter.getCount() == 0) {
+            TextView emptyView = (TextView) getView().findViewById(R.id.empty);
+            if(emptyView != null) {
+                int message = R.string.error_empty_matches_list;
+
+                @FootballScoresSyncAdapter.LocationStatus int status = Utilities.getLocationStatus(getActivity());
+                switch (status) {
+                    case FootballScoresSyncAdapter.LOCATION_STATUS_SERVER_DOWN:
+                        message = R.string.error_server_down;
+                        break;
+                    case FootballScoresSyncAdapter.LOCATION_STATUS_SERVER_INVALID:
+                        message = R. string.error_server_error;
+                        break;
+                    case FootballScoresSyncAdapter.LOCATION_STATUS_INVALID_REQUEST:
+                        message = R.string.error_invalid_request;
+                    default:
+                        if (!Utilities.isNetworkAvailable(getActivity())) {
+                            message = R.string.error_no_network_connection;
+                        }
+                }
+                emptyView.setText(message);
+            }
+        }
+    }
 
 }

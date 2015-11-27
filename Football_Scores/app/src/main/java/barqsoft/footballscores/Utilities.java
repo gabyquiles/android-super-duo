@@ -1,14 +1,20 @@
 package barqsoft.footballscores;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
+
+import barqsoft.footballscores.sync.FootballScoresSyncAdapter;
 
 /**
  * Created by yehya khaled on 3/3/2015.
@@ -126,5 +132,27 @@ public class Utilities
             return url;
         }
         return null;
+    }
+
+    @SuppressWarnings("ResourceType")
+    static public @FootballScoresSyncAdapter.LocationStatus int getLocationStatus(Context context) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        return prefs.getInt(context.getString(R.string.pref_location_status_key),
+                FootballScoresSyncAdapter.LOCATION_STATUS_UNKNOWN);
+    }
+
+    /**
+     * Returns true if the network is available or about to become available.
+     *
+     * @param c Context used to get the ConnectivityManager
+     * @return
+     */
+    static public boolean isNetworkAvailable(Context c) {
+        ConnectivityManager cm =
+                (ConnectivityManager)c.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        return activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
     }
 }
