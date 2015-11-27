@@ -107,6 +107,7 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
                         }
                 }
                 emptyView.setText(message);
+                emptyView.setContentDescription(getString(message));
             }
         }
     }

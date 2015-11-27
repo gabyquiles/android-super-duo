@@ -12,6 +12,9 @@ import barqsoft.footballscores.sync.FootballScoresSyncAdapter;
 public class MainActivity extends ActionBarActivity
 {
     //TODO: List is hidden at the bottom
+    //TODO: Check Content descriptors - Check scored games
+    //TODO: Today matches
+
     public static int selected_match_id;
     public static int current_fragment = 2;
     public static String LOG_TAG = "MainActivity";
