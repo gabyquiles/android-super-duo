@@ -12,10 +12,14 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
+
+import com.google.android.gms.common.api.CommonStatusCodes;
+import com.google.android.gms.vision.barcode.Barcode;
 
 import it.jaschke.alexandria.api.Callback;
 
@@ -36,6 +40,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 
     public static final String MESSAGE_EVENT = "MESSAGE_EVENT";
     public static final String MESSAGE_KEY = "MESSAGE_EXTRA";
+    public static final String CURRENT_FRAGMENT = "CURRENT_FRAGMENT";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +86,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         }
 
         fragmentManager.beginTransaction()
-                .replace(R.id.container, nextFragment)
+                .replace(R.id.container, nextFragment, CURRENT_FRAGMENT)
                 .addToBackStack((String) title)
                 .commit();
     }
@@ -178,5 +183,18 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         super.onBackPressed();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Fragment currentFragment = getSupportFragmentManager().findFragmentByTag(CURRENT_FRAGMENT);
+        if (currentFragment != null && currentFragment.isVisible()) {
+            if(currentFragment.getClass() == AddBook.class) {
+                ((Callback)currentFragment).processActivityResult(requestCode, resultCode, data);
+            }
+        }
+    }
+
+    public interface Callback {
+        void processActivityResult(int requestCode, int resultCode, Intent data);
+    }
 
 }
