@@ -16,4 +16,8 @@
     <dimen name="button_horizontal_padding">120dp</dimen>
     <dimen name="pager_padding">4dp</dimen>
     <dimen name="list_item_padding">5dp</dimen>
+    <dimen name="widget_today_matches_default_height">180dp</dimen>
+    <dimen name="widget_today_matches_min_resize_height">180dp</dimen>
+    <dimen name="widget_today_matches_min_resize_width">@dimen/widget_today_matches_default_height</dimen>
+    <dimen name="widget_today_matches_default_width">250dp</dimen>
 </resources>

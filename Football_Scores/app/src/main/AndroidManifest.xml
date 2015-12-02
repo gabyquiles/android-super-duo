@@ -35,7 +35,10 @@
 
         <provider
             android:name=".ScoresProvider"
-            android:authorities="barqsoft.footballscores" />
+            android:authorities="@string/content_authority"
+            android:exported="true"
+            android:syncable="true">
+        </provider>
 
         <activity
             android:name=".AboutActivity"
@@ -80,6 +83,22 @@
                 android:name="android.content.SyncAdapter"
                 android:resource="@xml/syncadapter" />
         </service>
+
+        <receiver
+            android:name=".widget.TodayMatchesWidgetProvider"
+            android:label="@string/title_widget_today_matches"
+            android:enabled="@bool/widget_today_matches_enabled" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="barqsoft.footballscores.ACTION_DATA_UPDATED" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider"
+                android:resource="@xml/widget_info_today_matches" />
+        </receiver>
+        <service android:name=".widget.TodayMatchesWidgetRemoteViewsService"
+            android:enabled="@bool/widget_today_matches_enabled"
+            android:exported="false"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
     </application>
 
 </manifest>
