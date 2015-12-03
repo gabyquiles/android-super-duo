@@ -24,12 +24,17 @@
     <string name="action_share">Share</string>
     <string name="back_button">go back</string>
     <string name="share_text">A must read book: </string>
+    <string name="pref_network_status_key" translatable="false">network_status</string>
 
     <string name="ok">OK</string>
     <string name="permission_camera_rationale">Access to the camera is needed for detection</string>
     <string name="no_camera_permission">This application cannot run because it does not have the camera permission.  The application will now exit.</string>
     <string name="low_storage_error">Face detector dependencies cannot be downloaded due to low device storage</string>
     <string name="scan_error">Can\'t identify the barcode</string>
+    <string name="error_no_book_available">Can\'t find a book with that code</string>
+    <string name="error_server_down">No communication with server</string>
+    <string name="error_server_error">Error communicating with server</string>
+    <string name="error_no_network_connection">No network connection available</string>
 
 <!-- TODO: Remove or change this placeholder text -->
     <string name="about_text">This application gets book information from a Google API. All titles, cover images, and author information come from there.

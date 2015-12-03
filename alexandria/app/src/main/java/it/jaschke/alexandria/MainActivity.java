@@ -12,14 +12,11 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
-
-import com.google.android.gms.common.api.CommonStatusCodes;
-import com.google.android.gms.vision.barcode.Barcode;
 
 import it.jaschke.alexandria.api.Callback;
 
@@ -44,6 +41,10 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //TODO: hide keyboard when changing fragments
+        //TODO: Sumarry of preference
+        //TODO: format About this app
+        //TODO: placeholder text in add book and change of orientation
         super.onCreate(savedInstanceState);
         IS_TABLET = isTablet();
         if(IS_TABLET){
@@ -89,6 +90,8 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
                 .replace(R.id.container, nextFragment, CURRENT_FRAGMENT)
                 .addToBackStack((String) title)
                 .commit();
+//        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+//        imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
     }
 
     public void setTitle(int titleId) {
@@ -160,7 +163,13 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         @Override
         public void onReceive(Context context, Intent intent) {
             if(intent.getStringExtra(MESSAGE_KEY)!=null){
-                Toast.makeText(MainActivity.this, intent.getStringExtra(MESSAGE_KEY), Toast.LENGTH_LONG).show();
+                Fragment currentFragment = getSupportFragmentManager().findFragmentByTag(CURRENT_FRAGMENT);
+                if(currentFragment instanceof ShowError) {
+                    //Callback Fragment to show error
+                    ((ShowError) currentFragment).setErrorMessage(intent.getStringExtra(MESSAGE_KEY));
+//                    Toast.makeText(MainActivity.this, intent.getStringExtra(MESSAGE_KEY), Toast.LENGTH_LONG).show();
+                }
+
             }
         }
     }
@@ -195,6 +204,10 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 
     public interface Callback {
         void processActivityResult(int requestCode, int resultCode, Intent data);
+    }
+
+    public interface ShowError {
+        void setErrorMessage(String errorMessage);
     }
 
 }

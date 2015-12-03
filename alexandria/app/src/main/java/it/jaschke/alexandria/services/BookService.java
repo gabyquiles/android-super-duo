@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.support.annotation.IntDef;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
@@ -16,9 +17,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import it.jaschke.alexandria.Exceptions.NotFoundException;
+import it.jaschke.alexandria.Exceptions.ServerDownException;
 import it.jaschke.alexandria.MainActivity;
 import it.jaschke.alexandria.R;
 import it.jaschke.alexandria.data.AlexandriaContract;
@@ -37,6 +42,7 @@ public class BookService extends IntentService {
     public static final String DELETE_BOOK = "it.jaschke.alexandria.services.action.DELETE_BOOK";
 
     public static final String EAN = "it.jaschke.alexandria.services.extra.EAN";
+
 
     public BookService() {
         super("Alexandria");
@@ -111,6 +117,15 @@ public class BookService extends IntentService {
             urlConnection.setRequestMethod("GET");
             urlConnection.connect();
 
+            switch (urlConnection.getResponseCode()) {
+                case HttpURLConnection.HTTP_OK:
+                    break;
+                case HttpURLConnection.HTTP_NOT_FOUND:
+                    throw new NotFoundException();
+                default:
+                    throw new ServerDownException();
+            }
+
             InputStream inputStream = urlConnection.getInputStream();
             StringBuffer buffer = new StringBuffer();
             if (inputStream == null) {
@@ -128,7 +143,12 @@ public class BookService extends IntentService {
                 return;
             }
             bookJsonString = buffer.toString();
+        } catch (NotFoundException e) {
+            sendNetworkStatus(getResources().getString(R.string.error_no_book_available));
+        } catch (ServerDownException e) {
+            sendNetworkStatus(getResources().getString(R.string.error_server_down));
         } catch (Exception e) {
+            sendNetworkStatus(getResources().getString(R.string.error_server_error));
             Log.e(LOG_TAG, "Error ", e);
         } finally {
             if (urlConnection != null) {
@@ -143,7 +163,12 @@ public class BookService extends IntentService {
             }
 
         }
+        if(bookJsonString != null) {
+            processResponse(ean, bookJsonString);
+        }
+    }
 
+    private void processResponse(String ean, String bookJsonString) {
         final String ITEMS = "items";
 
         final String VOLUME_INFO = "volumeInfo";
@@ -229,5 +254,11 @@ public class BookService extends IntentService {
             getContentResolver().insert(AlexandriaContract.CategoryEntry.CONTENT_URI, values);
             values= new ContentValues();
         }
+    }
+
+    private void sendNetworkStatus(String message) {
+        Intent messageIntent = new Intent(MainActivity.MESSAGE_EVENT);
+        messageIntent.putExtra(MainActivity.MESSAGE_KEY, message);
+        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(messageIntent);
     }
  }
