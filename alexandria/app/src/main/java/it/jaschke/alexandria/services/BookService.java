@@ -5,7 +5,6 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.support.annotation.IntDef;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
@@ -17,8 +16,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -144,10 +141,13 @@ public class BookService extends IntentService {
             }
             bookJsonString = buffer.toString();
         } catch (NotFoundException e) {
+            //Error: No found with that code
             sendNetworkStatus(getResources().getString(R.string.error_no_book_available));
         } catch (ServerDownException e) {
+            //Error: Could not establish connection with server
             sendNetworkStatus(getResources().getString(R.string.error_server_down));
         } catch (Exception e) {
+            //Error: Communication error
             sendNetworkStatus(getResources().getString(R.string.error_server_error));
             Log.e(LOG_TAG, "Error ", e);
         } finally {
@@ -187,9 +187,8 @@ public class BookService extends IntentService {
             if(bookJson.has(ITEMS)){
                 bookArray = bookJson.getJSONArray(ITEMS);
             }else{
-                Intent messageIntent = new Intent(MainActivity.MESSAGE_EVENT);
-                messageIntent.putExtra(MainActivity.MESSAGE_KEY,getResources().getString(R.string.not_found));
-                LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(messageIntent);
+                //Error: Empty response
+                sendNetworkStatus(getResources().getString(R.string.not_found));
                 return;
             }
 

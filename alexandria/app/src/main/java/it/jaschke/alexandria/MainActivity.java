@@ -165,7 +165,6 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
                 if(currentFragment instanceof ShowError) {
                     //Callback Fragment to show error
                     ((ShowError) currentFragment).setErrorMessage(intent.getStringExtra(MESSAGE_KEY));
-//                    Toast.makeText(MainActivity.this, intent.getStringExtra(MESSAGE_KEY), Toast.LENGTH_LONG).show();
                 }
 
             }
