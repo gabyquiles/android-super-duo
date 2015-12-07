@@ -35,6 +35,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/fullBookCover"
                     android:contentDescription="@string/book_cover"
+                    android:minHeight="@dimen/minimum_height_cover"
                     android:layout_marginTop="15dp"
                     android:layout_below="@+id/fullBookTitle"
                     android:layout_alignLeft="@+id/fullBookTitle"
