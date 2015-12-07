@@ -48,7 +48,6 @@
     <string name="sync_account_type" translatable="false">footballscores.barqsoft</string>
     <string name="pref_location_status_key" translatable="false">location_status</string>
 
-    <string name="api_key" translatable="false">de0402ba6584453d8f54b327bbf2cc61</string>
     <string name="api_base_url" translatable="false">http://api.football-data.org/v1</string>
     <string name="api_date_format" translatable="false">yyyy-MM-ddHH:mm:ss</string>
 </resources>
