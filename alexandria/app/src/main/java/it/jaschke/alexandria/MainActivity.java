@@ -15,6 +15,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import it.jaschke.alexandria.api.Callback;
 
@@ -42,7 +43,8 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         //TODO: hide keyboard when changing fragments
         //TODO: Sumarry of preference
         //TODO: format About this app
-        //TODO: placeholder text in add book and change of orientation
+        //TODO: RTL ++++
+        //TODO: Extract sizes to dimens
         super.onCreate(savedInstanceState);
         IS_TABLET = isTablet();
         if(IS_TABLET){
@@ -88,8 +90,6 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
                 .replace(R.id.container, nextFragment, CURRENT_FRAGMENT)
                 .addToBackStack((String) title)
                 .commit();
-//        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-//        imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
     }
 
     public void setTitle(int titleId) {
