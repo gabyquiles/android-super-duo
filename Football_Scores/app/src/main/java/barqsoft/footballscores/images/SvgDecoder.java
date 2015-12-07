@@ -13,6 +13,7 @@ import java.io.InputStream;
 
 /**
  * Decodes an SVG internal representation from an {@link InputStream}.
+ * Code taken from Glide/Samples
  */
 public class SvgDecoder implements ResourceDecoder<InputStream, SVG> {
     private final String LOG_TAG = SvgDecoder.class.getSimpleName();

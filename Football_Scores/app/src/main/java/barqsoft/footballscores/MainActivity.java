@@ -11,7 +11,6 @@ import barqsoft.footballscores.sync.FootballScoresSyncAdapter;
 
 public class MainActivity extends AppCompatActivity
 {
-    //TODO: List is hidden at the bottom
 
     public static int selected_match_id;
     public static int current_fragment = 2;

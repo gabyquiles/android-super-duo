@@ -130,6 +130,8 @@ public class Utilities
             String url = teamCursor.getString(1);
             teamCursor.close();
             return url;
+        } else {
+            teamCursor.close();
         }
         return null;
     }

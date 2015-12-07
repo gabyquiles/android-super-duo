@@ -13,6 +13,7 @@ import com.bumptech.glide.request.target.Target;
  * Listener which updates the {@link ImageView} to be software rendered,
  * because {@link com.caverock.androidsvg.SVG SVG}/{@link android.graphics.Picture Picture}
  * can't render on a hardware backed {@link android.graphics.Canvas Canvas}.
+ * Code taken from Glide/Samples
  *
  * @param <T> not used, here to prevent unchecked warnings at usage
  */

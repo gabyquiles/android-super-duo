@@ -23,12 +23,11 @@ import java.util.concurrent.ExecutionException;
 import barqsoft.footballscores.R;
 
 /**
- * Created by gabrielquiles-perez on 11/23/15.
+ * Loads an SVG image
  */
 public class SVGLoader extends ImageLoader{
     private final String LOG_TAG = SVGLoader.class.getSimpleName();
     private static SVGLoader mLoader;
-//    private GenericRequestBuilder<Uri, InputStream, SVG, PictureDrawable> mRequestBuilder;
     private ResourceTranscoder<SVG, PictureDrawable> mTranscoder;
     private Encoder<InputStream> mStreamEncoder;
     private FileToStreamDecoder<SVG> mDecoder;

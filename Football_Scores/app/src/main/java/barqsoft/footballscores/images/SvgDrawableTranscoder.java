@@ -10,6 +10,7 @@ import com.caverock.androidsvg.SVG;
 
 /**
  * Convert the {@link SVG}'s internal representation to an Android-compatible one ({@link Picture}).
+ * Code taken from Glide/Samples
  */
 public class SvgDrawableTranscoder implements ResourceTranscoder<SVG, PictureDrawable> {
     @Override

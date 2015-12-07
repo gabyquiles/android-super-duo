@@ -18,6 +18,7 @@
             android:id = "@+id/scores_list"
             android:divider="@android:color/transparent"
             android:dividerHeight="@dimen/League"
+            android:layout_marginBottom="?attr/actionBarSize"
             />
         <TextView
             android:id="@+id/empty"
