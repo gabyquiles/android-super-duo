@@ -23,6 +23,11 @@ android {
     buildTypes {
         release {
             testCoverageEnabled = true
+
+            // Remove unused resurces
+            minifyEnabled true
+            shrinkResources true
+
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug{
